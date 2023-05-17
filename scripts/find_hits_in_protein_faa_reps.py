@@ -5,8 +5,8 @@ def find(name, path):
         if name in files:
             return os.path.join(root, name)
 
-path = "/nobackup/cm16jf/databases/protein_faa_reps"
-namesFile = "/nobackup/cm16jf/databases/protein_faa_reps/Actinobacteria_codes.txt"
+path = "~/databases/protein_faa_reps"
+namesFile = "~/databases/protein_faa_reps/list_of_hit_proteins_codes.txt"
 
 #Reads each line and adds it to a list
 
@@ -17,7 +17,7 @@ with open(namesFile, "r") as f:
 
 try:
 
-    os.mkdir(path + "/actinobacteria_seqs")
+    os.mkdir(path + "/new_seqs_directory")
 except OSError:
     print ("Creation of the directory %s failed" % path)
 else:
@@ -29,7 +29,7 @@ for fileName in data:
     x = find(fileName + "_protein.faa", path + "/bacteria")
     if x != None:
         print(x + " found!")
-        shutil.copy(x, path + "/actinobacteria_seqs" )
+        shutil.copy(x, path + "/new_seqs_directory" )
     else:
         print("Not found")
 

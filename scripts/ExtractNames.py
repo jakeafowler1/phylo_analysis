@@ -1,11 +1,12 @@
+#This script is to find the taxonomic labels ie. species, class, order (s__, c__,o__) etc. from the bac120 file downloaded from GTDB and insert them in place of the existing
 from re import *
 import time
 import os
 
 #Change these file locations as desired
-fNameTree = '//nobackup//cm16jf//databases//protein_faa_reps//group3_seqs//group3_hits_2.aln.nwk' # tree file
-fNameBac = '//nobackup//cm16jf//databases//taxonomy//bac120_taxonomy.tsv' # bacteria file
-fNameGeneral = '//nobackup//cm16jf//databases//protein_faa_reps//bacteria//' # File containing the protien sequences in them
+fNameTree = '//nobackup//cm16jf//databases//protein_faa_reps//group3_seqs//group3_hits_2.aln.nwk' #file you would like to alter
+fNameBac = '//nobackup//cm16jf//databases//taxonomy//bac120_taxonomy.tsv' # bac120 taxonomy file
+fNameGeneral = '//nobackup//cm16jf//databases//protein_faa_reps//bacteria//' # GTDB database of protein_faa_reps
 extension = "_protein.faa" # Extension of the protein files
 
 # Open tree file and read contents, then close
@@ -31,8 +32,8 @@ f.close()
 code = findall("[a-zA-Z0-9]*\_[a-zA-Z0-9]*\_[0-9]*\.[0-9]*", contentsBac)
 
 #Change the inital letter here to give a differnt name
-name = findall("p\_\_[a-zA-Z0-9\- ]*", contentsBac)
-name2 = findall("s\_\_[a-zA-Z0-9\- ]*", contentsBac)
+name = findall("p\_\_[a-zA-Z0-9\- ]*", contentsBac) #search for phylum
+name2 = findall("s\_\_[a-zA-Z0-9\- ]*", contentsBac) #search for species
 
 # These two lengths must be the same in order for it to work
 print(len(code))
@@ -62,7 +63,7 @@ for c in code:
             if extStr in contentsCurr:
                 print("Replace " + extStr + " with " + name[counter] + "_" + name2[counter])
                 # This replaces the name, customise as you wish. Will replace each iteration.
-                newContents = newContents.replace(extStr,"CONTENTS==" + name[counter] + "_" + name2[counter] + "_" + extStr)
+                newContents = newContents.replace(extStr, extStr + name[counter] + "_" + name2[counter]) #replace GTDB protein >code with >code_phylum_species
                 found += 1 #Tallys the number of found hits
 
         #Close the file
@@ -79,6 +80,6 @@ print(notfound)
 print(newContents)
 
 #Writes it to a new file
-file = open("/nobackup/cm16jf/databases/protein_faa_reps/treefiles/.aln", "w")
+file = open("/nobackup/cm16jf/databases/protein_faa_reps/treefiles/.aln", "w") #the name of the new file
 file.write(newContents)
 file.close()
